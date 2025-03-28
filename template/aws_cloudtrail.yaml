@@ -1,0 +1,20 @@
+transforms:
+  pre-aws_cloudtrail-${id}:
+    inputs:
+    - source-aws_cloudtrail-${id}
+    type: remap
+    source: '. = .Records'
+
+  logsource-aws_cloudtrail-${id}:
+    inputs:
+    - pre-aws_cloudtrail-${id}
+    source: |
+      %logsource = {"product": "aws", "service": "cloudtrail"}
+      %source_id = "source-aws_cloudtrail-${id}"
+    type: remap
+
+  ocsf-aws_cloudtrail-${id}:
+    inputs:
+    - logsource-aws_cloudtrail-${id}
+    type: remap
+    file: $${STRIEM_REMAPS_DIR:-.}/aws/cloudtrail/remap.vrl

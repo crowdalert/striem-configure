@@ -1,0 +1,54 @@
+schema:
+  log_namespace: true
+
+sources:
+  source-vector:
+    type: vector
+    address: "${STRIEM_OUTPUT_VECTOR_ADDRESS:-0.0.0.0:6000}"
+
+transforms:
+  logsource-striem:
+    type: filter
+    inputs:
+      - source-vector
+    condition: '!is_null(%logsource)'
+
+  raw:
+    type: exclusive_route
+    inputs:
+      - logsource-*
+    routes:
+      - name: ocsf
+        condition: "!is_null(%ocsf)"
+      - name: aws_cloudtrail
+        condition: '%logsource.product == "aws" && %logsource.service == "cloudtrail"'
+      - name: github_audit
+        condition: '%logsource.product == "github" && %logsource.service == "audit"'
+      - name: gcp
+        condition: '%logsource.product == "gcp"'
+      - name: m365
+        condition: '%logsource.product == "m365"'
+      - name: okta
+        condition: '%logsource.product == "okta"'
+      - name: wiz
+        condition: '%logsource.product == "wiz"'
+
+  ocsf-noop:
+    type: remap
+    inputs:
+      - raw.ocsf
+    source: "."
+
+  cycle-filter:
+    type: filter
+    inputs:
+      - ocsf-*
+    condition: "is_null(%striem)"
+
+sinks:
+  striem:
+    type: vector
+    inputs:
+      - cycle-filter
+    address: "${STRIEM_SOURCE_VECTOR_ADDRESS:-127.0.0.1:50050}"
+    healthcheck: false

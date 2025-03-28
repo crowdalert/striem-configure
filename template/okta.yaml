@@ -1,0 +1,15 @@
+transforms:
+  pre-okta-${id}:
+    type: remap
+    inputs:
+      - raw.okta
+    source: |
+      del(%striem)
+      %logsource = {"product": "okta", "service": "audit"}
+      %source_id = "okta-${id}"
+
+  ocsf-okta-${id}:
+    type: remap
+    inputs:
+      - pre-okta-${id}
+    file: $${STRIEM_REMAPS_DIR:-.}/okta/remap.vrl

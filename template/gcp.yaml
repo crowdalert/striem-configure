@@ -1,0 +1,14 @@
+transforms:
+  logsource-gcp-${id}:
+    type: remap
+    inputs:
+      - source-gcp-${id}
+    source: |
+      %logsource = {"product": "gcp"}
+      %source_id = "github-${id}"
+
+  ocsf-gcp-${id}:
+    inputs:
+    - logsource-gcp-${id}
+    type: remap
+    file: $${STRIEM_REMAPS_DIR:-.}/google.cloud/audit/remap.vrl

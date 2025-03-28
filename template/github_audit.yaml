@@ -1,0 +1,21 @@
+sources:
+  source-github_audit-${id}:
+    type: splunk_hec
+    address: 0.0.0.0:8088
+    valid_tokens:
+      - ${id}
+
+transforms:
+  logsource-github_audit-${id}:
+    type: remap
+    inputs:
+      - source-github_audit-${id}
+    source: |
+      %logsource = {"product": "github", "service": "audit"}
+      %source_id = "github-${id}"
+
+  ocsf-github_audit-${id}:
+    inputs:
+    - logsource-github_audit-${id}
+    type: remap
+    file: $${STRIEM_REMAPS_DIR:-.}/github/audit/remap.vrl
