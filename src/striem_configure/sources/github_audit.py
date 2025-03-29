@@ -2,7 +2,7 @@ from prompt_toolkit.layout import HSplit, AnyContainer
 from prompt_toolkit.widgets import Label
 from prompt_toolkit.formatted_text import HTML
 
-from sources._source import Source
+from . import Source
 
 
 class GithubEnterpriseAudit(Source):

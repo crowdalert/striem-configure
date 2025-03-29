@@ -1,0 +1,29 @@
+[project]
+name = "striem_configure"
+version = "0.0.1"
+authors = [
+  { name="Crowdalert, Inc", email="hello@crowdalert.com" },
+]
+description = "Configuration utility for the StrIEM open-source SIEM"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "MPL-2.0"
+dependencies = [
+    "prompt_toolkit~=3.0",
+    "pyyaml~=6.0"
+]
+
+[project.urls]
+Homepage = "https://github.com/crowdalert/striem-configure"
+Issues = "https://github.com/crowdalert/striem-configure"
+
+[project.scripts]
+striem-configure = "striem_configure:run"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"

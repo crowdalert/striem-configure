@@ -1,0 +1,2 @@
+graft */static/*
+include src/striem_configure/template/*.yaml

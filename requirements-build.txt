@@ -1,1 +1,2 @@
+build
 pyinstaller~=6.12

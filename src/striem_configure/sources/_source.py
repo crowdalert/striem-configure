@@ -59,14 +59,14 @@ class Source:
 
     @property
     def template(self) -> Template:
-        template_file = Path(inspect.getfile(self.__class__)).name.replace(
-            ".py", ".yaml"
+        classfile = Path(inspect.getfile(self.__class__))
+        template_file = Path(
+            classfile.parent.parent,
+            "template",
+            classfile.name.replace(classfile.suffix, ".yaml"),
         )
-        template_dir = Path(
-            Path(inspect.getfile(self.__class__)).parent.parent, "template"
-        )
-        if Path(template_dir, template_file).exists():
-            with open(Path(template_dir, template_file)) as f:
+        if template_file.exists():
+            with open(template_file) as f:
                 return Template(f.read())
         return Template("")
 
