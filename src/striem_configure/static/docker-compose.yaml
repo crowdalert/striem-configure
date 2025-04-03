@@ -8,7 +8,7 @@ services:
       - $PWD/assets:/opt/striem:ro
       - $HOME/.aws:/root/.aws:rw
     environment:
-      STRIEM_REMAPS: /opt/striem/remaps
+      STRIEM_REMAPS: /opt/striem/vrl
       STRIEM_SOURCE_VECTOR_ADDRESS: http://striem-state:50050
     command: -c '/etc/striem/**/*.yaml'
 

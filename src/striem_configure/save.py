@@ -7,13 +7,15 @@ from .sources import inputs
 SOURCE_STATIC = Path(Path(__file__).parent, "static")
 SOURCE_STATIC_VECTOR = Path(SOURCE_STATIC, "vector")
 
+SOURCE_REMAPS = Path(Path(__file__).parent, "includes", "vrl")
+
 OUT_CONFIG_DIR = Path("config")
 OUT_VECTOR_DIR = Path(OUT_CONFIG_DIR, "vector")
 OUT_VECTOR_STATIC_DIR = Path(OUT_VECTOR_DIR, "static")
 
 OUT_ASSETS_DIR = Path("assets")
 OUT_DETECTIONS_DIR = Path(OUT_ASSETS_DIR, "detections")
-OUT_REMAPS_DIR = Path(OUT_ASSETS_DIR, "remaps")
+OUT_REMAPS_DIR = Path(OUT_ASSETS_DIR, "vrl")
 OUT_SCHEMA_DIR = Path(OUT_ASSETS_DIR, "schema")
 OUT_DATA_DIR = Path("data")
 
@@ -48,9 +50,14 @@ def save(savedir: str = "dist") -> None:
     with open(Path(savedir, OUT_CONFIG_DIR, STRIEM_CONFIG), "w") as f:
         f.write(yaml.dump(striem_config))
 
+    # docker-compose.yaml
     dockercompose = Path(SOURCE_STATIC, DOCKER_COMPOSE)
     shutil.copy(dockercompose, Path(savedir, DOCKER_COMPOSE))
 
+    # VRL transforms
+    shutil.copytree(SOURCE_REMAPS, Path(savedir, OUT_REMAPS_DIR), dirs_exist_ok=True)
+
+    # Empty assets directories
     Path(savedir, OUT_DETECTIONS_DIR).mkdir(parents=True, exist_ok=True)
     Path(savedir, OUT_REMAPS_DIR).mkdir(parents=True, exist_ok=True)
     Path(savedir, OUT_SCHEMA_DIR).mkdir(parents=True, exist_ok=True)

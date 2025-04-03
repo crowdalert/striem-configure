@@ -1,2 +1,4 @@
-graft */static/*
+graft src/striem_configure/static/*
+graft src/striem_configure/includes/*
 include src/striem_configure/template/*.yaml
+include src/striem_configure/static/docker-compose.yaml
