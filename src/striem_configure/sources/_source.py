@@ -12,17 +12,16 @@ from prompt_toolkit.filters import Condition
 from prompt_toolkit.layout.containers import HSplit, VSplit
 
 
-inputs: list["Source"] = []
-
-
 class Source:
     id: str
     label: str
     friendly_id: str = ""
+    _inputs: list["Source"]
     _container: AnyContainer
 
-    def __init__(self, id=None):
+    def __init__(self, inputs=None, id=None):
         self.id = id if id else str(uuid4())
+        self._inputs = inputs
         self._container = Dialog(
             title=self.label,
             body=HSplit(
@@ -72,7 +71,7 @@ class Source:
 
     def ok(self):
         if self.validate():
-            inputs.append(self)
+            self._inputs.append(self)
         self.close()
 
     def close(self):
@@ -86,8 +85,10 @@ class Source:
 
 class SourcePicker:
     container: FloatContainer
+    inputs: list[Source]
 
-    def __init__(self):
+    def __init__(self, inputs: list[Source] = None):
+        self.inputs = inputs
         from . import _sourcetypes
 
         sources = [(cls, cls.label) for cls in _sourcetypes]
@@ -118,7 +119,7 @@ class SourcePicker:
         parent: FloatContainer = get_app().layout.container
         floats = parent.floats
         floats.pop()
-        child = Float(content=self.selection.current_value())
+        child = Float(content=self.selection.current_value(inputs=self.inputs))
         floats.append(child)
         get_app().layout.focus(child.content)
 

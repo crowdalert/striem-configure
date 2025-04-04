@@ -8,9 +8,6 @@ from . import Source
 class GithubEnterpriseAudit(Source):
     label = "Github Enterprise Audit Logs"
 
-    def __init__(self, id=None):
-        super().__init__(id)
-
     def validate(self):
         return True
 

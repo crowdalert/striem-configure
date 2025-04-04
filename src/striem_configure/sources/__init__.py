@@ -1,7 +1,7 @@
 import pkgutil
 import importlib
 
-from ._source import inputs, Source, SourcePicker
+from ._source import Source, SourcePicker
 
 _sourcetypes: list[Source] = []
 
@@ -21,7 +21,6 @@ if not _guard.get(__name__):
                 _sourcetypes.append(_attr)
 
 __all__ = [
-    "inputs",
     "Source",
     "SourcePicker",
 ]

@@ -2,11 +2,16 @@ from prompt_toolkit.application import Application
 from prompt_toolkit.layout import (
     Layout,
 )
+from prompt_toolkit.layout.containers import FloatContainer
+
+from .common import kb, style
 from .save import save
-from .main import root, kb, style
+from .inputs import InputSelectDialog
+from .sources import Source
+
 
 app: Application[None] = Application(
-    layout=Layout(root),
+    layout=Layout(FloatContainer(content=InputSelectDialog(), floats=[], z_index=0)),
     full_screen=True,
     key_bindings=kb,
     style=style,
@@ -14,8 +19,7 @@ app: Application[None] = Application(
 
 
 def run():
-    final: dict = app.run()
+    final: list[Source] | None = app.run()
 
-    if final and final.get("save"):
-        output = final.get("output")
-        save(output)
+    if final:
+        save(final)

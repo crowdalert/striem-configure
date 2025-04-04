@@ -18,7 +18,7 @@ class GCP(Source):
     api_key: TextArea
     system_creds: Checkbox
 
-    def __init__(self, id=None):
+    def __init__(self, *args, **kwargs):
         self.subscription = TextArea(
             text="",
             multiline=False,
@@ -72,7 +72,7 @@ class GCP(Source):
             ],
         )
 
-        super().__init__(id)
+        super().__init__(*args, **kwargs)
 
     def validate(self):
         return all([self.project.text, self.subscription.text]) and (

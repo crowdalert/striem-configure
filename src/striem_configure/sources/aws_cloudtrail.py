@@ -17,7 +17,7 @@ class AwsCloudtrail(Source):
     region: TextArea
     role: TextArea
 
-    def __init__(self, id=None):
+    def __init__(self, *args, **kwargs):
         self.queue_url = TextArea(
             text="",
             multiline=False,
@@ -76,7 +76,7 @@ class AwsCloudtrail(Source):
             ],
         )
 
-        super().__init__(id)
+        super().__init__(*args, **kwargs)
 
     @property
     def friendly_id(self) -> str:
