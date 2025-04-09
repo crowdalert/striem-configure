@@ -7,9 +7,9 @@
 StrIEM is an open-source SIEM system that leverages modern data engineering tools and open standards to provide security monitoring capabilities, data processing / normalization, and data routing.
 
 StrIEM combines and builds on:
-- Vector
-- Sigma
-- OCSF
+- [Vector](https://vector.dev)
+- [Sigma](https://sigmahq.io)
+- [OCSF](https://ocsf.io)
 
 ### Key Features
 
