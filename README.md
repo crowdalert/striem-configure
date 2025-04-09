@@ -32,6 +32,8 @@ StrIEM combines and builds on:
     pip install striem-configure
     ```
 
+    (or, from this repository, `pip install .`)
+
 2. Generate your configuration, and follow the prompts:
     ```bash
     striem-configure
