@@ -5,10 +5,11 @@ import yaml
 from tempfile import TemporaryDirectory
 from prompt_toolkit.validation import Validator
 
-from prompt_toolkit.shortcuts import input_dialog
+from prompt_toolkit.shortcuts import input_dialog, yes_no_dialog
 
 from .common import style
 from .sources import Source
+from .util import fetch_from_github
 
 SOURCE_STATIC = Path(Path(__file__).parent, "static")
 SOURCE_STATIC_VECTOR = Path(SOURCE_STATIC, "vector")
@@ -75,6 +76,48 @@ def write_tree(inputs: list[Source]) -> TemporaryDirectory:
 
     return temp
 
+def fetch_transforms(
+    out: Path, repo: str = "crowdalert/ocsf-vrl", branch: str = "main"
+) -> None:
+    with TemporaryDirectory() as tempdir:
+        transforms = fetch_from_github(
+            repo=repo,
+            branch=branch,
+            out=tempdir,
+        )
+
+        if not out.exists():
+            out.mkdir(parents=True, exist_ok=True)
+
+        shutil.copytree(
+            transforms,
+            out,
+            ignore=shutil.ignore_patterns("*.md", "LICENSE", ".*", "*.py", "*.txt"),
+            dirs_exist_ok=True,
+        )
+
+
+def fetch_schema(
+    out: Path, repo: str = "crowdalert/ocsf-parquet", branch: str = "main"
+) -> None:
+    with TemporaryDirectory() as tempdir:
+        transforms = fetch_from_github(
+            repo=repo,
+            branch=branch,
+            out=tempdir,
+        )
+
+        if not out.exists():
+            out.mkdir(parents=True, exist_ok=True)
+
+        shutil.copytree(
+            transforms,
+            out,
+            ignore=shutil.ignore_patterns(
+                "README*", "*.md", "LICENSE", ".*", "*.py", "*.txt"
+            ),
+            dirs_exist_ok=True,
+        )
 
 def save(inputs: list[Source]) -> None:
     """
@@ -92,10 +135,38 @@ def save(inputs: list[Source]) -> None:
             error_message="Please enter a directory",
             move_cursor_to_end=True,
         ),
+        default="striem",
     ).run()
 
     if not confirm:
         return
+
+    fetch_transforms(Path(configtree.name, OUT_REMAPS_DIR))
+    fetch_schema(Path(configtree.name, OUT_SCHEMA_DIR))
+
+    fetch_sigma = yes_no_dialog(
+        title="StrIEM Configuration",
+        text="Fetch open-source detections from SigmaHQ?",
+        yes_text="Yes",
+        no_text="No",
+        style=style,
+    ).run()
+
+    if fetch_sigma:
+        with TemporaryDirectory() as tempdir:
+            sigmarules = fetch_from_github(
+                repo="SigmaHQ/Sigma",
+                branch="master",
+                out=tempdir,
+            )
+            shutil.copytree(
+                Path(sigmarules, "rules"),
+                Path(configtree.name, OUT_DETECTIONS_DIR),
+                ignore=shutil.ignore_patterns(
+                    "linux/*", "windows/*", "macos/*", "web/*"
+                ),  # temporary workaround for misbehaving rules
+                dirs_exist_ok=True,
+            )
 
     outdir = Path(confirm)
 

@@ -11,4 +11,4 @@ transforms:
     inputs:
     - logsource-gcp-${id}
     type: remap
-    file: $${STRIEM_REMAPS_DIR:-.}/google.cloud/audit/remap.vrl
+    file: $${STRIEM_REMAPS:-.}/google.cloud/audit/remap.vrl

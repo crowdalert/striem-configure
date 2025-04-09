@@ -12,4 +12,4 @@ transforms:
     type: remap
     inputs:
       - pre-okta-${id}
-    file: $${STRIEM_REMAPS_DIR:-.}/okta/remap.vrl
+    file: $${STRIEM_REMAPS:-.}/okta/remap.vrl

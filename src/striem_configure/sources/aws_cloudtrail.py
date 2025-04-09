@@ -57,7 +57,7 @@ class AwsCloudtrail(Source):
                 self.queue_url,
                 Label(text="Region"),
                 self.region,
-                Label(text="IAM Role to assume"),
+                Label(text="IAM Role ARN to assume"),
                 self.role,
                 Label(text=""),
                 disabled,
@@ -97,6 +97,12 @@ class AwsCloudtrail(Source):
                 "aws_access_key_id": self.aws_access_key_id.text,
                 "aws_secret_access_key": self.aws_secret_access_key.text,
             }
+
+        if self.role.text:
+            if data.get("auth") is None:
+                data["auth"] = {}
+            data["auth"]["assume_role"] = self.role.text
+
         return "\n".join(
             [
                 yaml.dump(

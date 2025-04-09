@@ -18,4 +18,4 @@ transforms:
     inputs:
     - logsource-github_audit-${id}
     type: remap
-    file: $${STRIEM_REMAPS_DIR:-.}/github/audit/remap.vrl
+    file: $${STRIEM_REMAPS:-.}/github/audit/remap.vrl

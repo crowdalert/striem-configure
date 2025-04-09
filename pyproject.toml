@@ -14,7 +14,8 @@ classifiers = [
 license = "MPL-2.0"
 dependencies = [
     "prompt_toolkit~=3.0",
-    "pyyaml~=6.0"
+    "pyyaml~=6.0",
+    "requests~=2.32"
 ]
 
 [project.urls]

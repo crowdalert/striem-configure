@@ -45,6 +45,12 @@ transforms:
       - ocsf-*
     condition: "is_null(%striem)"
 
+  actions-alert:
+    type: filter
+    inputs:
+      - ocsf-*
+    condition: ".type_uid == 200401"
+
 sinks:
   striem:
     type: vector

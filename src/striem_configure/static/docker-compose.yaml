@@ -6,7 +6,6 @@ services:
       - $PWD/static/vector:/etc/striem/static:ro
       - $PWD/config/vector:/etc/striem/vector:ro
       - $PWD/assets:/opt/striem:ro
-      - $HOME/.aws:/root/.aws:rw
     environment:
       STRIEM_REMAPS: /opt/striem/vrl
       STRIEM_SOURCE_VECTOR_ADDRESS: http://striem-state:50050
@@ -14,11 +13,11 @@ services:
 
   striem-state:
     container_name: striem-state
-    image: sonnens/striem-state:latest
+    image: crowdalert/striem-state:latest
     environment:
       RUST_LOG: info
       STRIEM_DETECTIONS: /opt/striem/detections
-      STRIEM_STORAGE_SCHEMA: /opt/striem/schema
+      STRIEM_STORAGE_SCHEMA: /opt/striem/schema/1.4.0
       STRIEM_SOURCE_VECTOR_ADDRESS: '0.0.0.0:50050'
       STRIEM_OUTPUT_VECTOR_ADDRESS: 'http://striem-vector:6000'
       STRIEM_STORAGE_PATH: /data

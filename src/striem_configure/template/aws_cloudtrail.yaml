@@ -17,4 +17,4 @@ transforms:
     inputs:
     - logsource-aws_cloudtrail-${id}
     type: remap
-    file: $${STRIEM_REMAPS_DIR:-.}/aws/cloudtrail/remap.vrl
+    file: $${STRIEM_REMAPS:-.}/aws/cloudtrail/remap.vrl
