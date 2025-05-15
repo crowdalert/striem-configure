@@ -77,9 +77,9 @@ striem-configure (this repository) generates a set of configuration files creati
 - `ocsf-<source type>-<source id>`: events will be normalized to valid [OCSF](https://ocsf.io)
 
     Events from `ocsf-*` are then sent to StrIEM State to be written to Parquet files
-- `actions-<action type>`: Events from this data stream are OCSF normalized data filtered by type, indicating some action
+- `action-<action type>`: Events from this data stream are OCSF normalized data filtered by type, indicating some action
 
-    For instance, a Vector sink configuration can consume `actions-alert` as it's `inputs` parameter to send all detection matches to it's target. A Vector configuration for writing alerts to the console might look like the following:
+    For instance, a Vector sink configuration can consume `action-alert` as it's `inputs` parameter to send all detection matches to it's target. A Vector configuration for writing alerts to the console might look like the following:
 
     ```yaml
     sinks:
@@ -87,7 +87,7 @@ striem-configure (this repository) generates a set of configuration files creati
         type: console
         encoding:
             codec: json
-        inputs: ["actions-alert"]
+        inputs: ["action-alert"]
     ```
 ## Contributing
 

@@ -45,11 +45,13 @@ transforms:
       - ocsf-*
     condition: "is_null(%striem)"
 
-  actions-alert:
-    type: filter
+  action:
+    type: exclusive_route
     inputs:
       - ocsf-*
-    condition: ".type_uid == 200401"
+    routes:
+      - name: alert
+        condition: ".type_uid == 200401"
 
 sinks:
   striem:

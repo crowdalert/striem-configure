@@ -162,9 +162,6 @@ def save(inputs: list[Source]) -> None:
             shutil.copytree(
                 Path(sigmarules, "rules"),
                 Path(configtree.name, OUT_DETECTIONS_DIR),
-                ignore=shutil.ignore_patterns(
-                    "linux/*", "windows/*", "macos/*", "web/*"
-                ),  # temporary workaround for misbehaving rules
                 dirs_exist_ok=True,
             )
 

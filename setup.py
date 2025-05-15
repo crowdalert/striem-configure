@@ -20,12 +20,13 @@ class BuildWithSubmodules(build):
 
         vrlpath = Path('build/lib/striem_configure/includes/vrl')
 
-        subprocess.check_call(['git',
-                               'clone',
-                               '--depth',
-                               '1',
-                               'https://github.com/crowdalert/ocsf-vrl.git',
-                               str(vrlpath)])
+        if not Path.exists(vrlpath): 
+            subprocess.check_call(['git',
+                                   'clone',
+                                   '--depth',
+                                   '1',
+                                   'https://github.com/crowdalert/ocsf-vrl.git',
+                                   str(vrlpath)])
 
         # don't package git repository
         shutil.rmtree(Path(vrlpath, Path('.git')),

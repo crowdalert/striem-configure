@@ -18,17 +18,23 @@ from prompt_toolkit.widgets import (
     Dialog,
     Label,
 )
+from prompt_toolkit.filters import Condition
 
 from .sources import SourcePicker, Source
+from .sinks import SinkPicker, Sink
 from .util import open_dialog
 
 
-class InputSelector:
-    inputs: list[Source]
+class Selector:
+    inputs: list[Source | Sink]
+    picker: type[SourcePicker | SinkPicker]
+    title: str
 
-    def __init__(self):
+    def __init__(self, picker: type[SourcePicker | SinkPicker], title: str):
         self.selected_line = 0
         self.inputs = []
+        self.picker = picker
+        self.title = title
 
     def _get_formatted_text(self):
         result = []
@@ -67,14 +73,14 @@ class InputSelector:
         return Box(
             HSplit(
                 [
-                    Label("* Inputs", style="fg:ansiblue"),
+                    Label(f"* {self.title}", style="fg:ansiblue"),
                     VSplit(
                         [
                             Label(" \n" * 5, width=2),
                             Window(
                                 content=FormattedTextControl(
                                     text=self._get_formatted_text,
-                                    focusable=True,
+                                    focusable=Condition(lambda: bool(self.inputs)),
                                     key_bindings=self._get_key_bindings(),
                                 ),
                                 height=Dimension(preferred=5, max=5),
@@ -89,10 +95,10 @@ class InputSelector:
                     VSplit(
                         [
                             Button(
-                                text="Add Input",
-                                width=11,
+                                text="Add",
+                                width=5,
                                 handler=lambda: open_dialog(
-                                    SourcePicker(inputs=self.inputs)
+                                    self.picker(inputs=self.inputs)
                                 ),
                             )
                         ],
@@ -103,18 +109,22 @@ class InputSelector:
             padding=1,
         )
 
-class InputSelectDialog:
-    inputselector: InputSelector
+
+class SelectDialog:
+    selectors: list[Selector]
 
     def __init__(self):
-        self.inputselector = InputSelector()
+        self.selectors = [
+            Selector(SourcePicker, "Inputs"),
+            Selector(SinkPicker, "Outputs & Actions"),
+        ]
 
     def __pt_container__(self) -> FloatContainer:
         return Dialog(
             title="StrIEM Configuration",
             with_background=True,
             body=Box(
-                self.inputselector,
+                HSplit(self.selectors),
                 padding=1,
                 padding_left=0,
                 padding_right=1,
@@ -123,7 +133,9 @@ class InputSelectDialog:
                 Button(
                     text="Done",
                     width=6,
-                    handler=lambda: get_app().exit(result=self.inputselector.inputs),
+                    handler=lambda: get_app().exit(
+                        result=[i for s in self.selectors for i in s.inputs]
+                    ),
                 ),
                 Button(
                     text="Cancel",
